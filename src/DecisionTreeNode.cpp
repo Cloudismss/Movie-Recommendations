@@ -9,7 +9,7 @@ string DecisionTreeNode::classify(DecisionTreeNode *node, Movie *movie)
   if (node->question == "Is the genre Action?")
     return (movie->getGenre() == "Action") ? classify(node->yes, movie) : classify(node->no, movie);
   if (node->question == "Is the rating PG-13 or lower?")
-    return (movie->getRating() == "PG-13" || movie->getRating() == "PG" || movie->getRating() == "G") ? classify(node->yes, movie) : classify(node->no, movie);
+    return (movie->getRating() != "R") ? classify(node->yes, movie) : classify(node->no, movie);
 
   // Reccomend condition 2
   if (node->question == "Is the director famous?")
