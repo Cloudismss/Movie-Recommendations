@@ -1,5 +1,6 @@
 set(Includes
         # Headers
+        "DecisionTree.h"
         "DecisionTreeNode.h"
         "Movie.h"
 )

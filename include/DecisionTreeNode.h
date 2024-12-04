@@ -9,6 +9,8 @@ using std::string;
 
 class DecisionTreeNode
 {
+friend class DecisionTree;
+
 private:
   string question;
   DecisionTreeNode *yes;
@@ -17,10 +19,6 @@ private:
 
 public:
   DecisionTreeNode(string question) : question(question), yes(nullptr), no(nullptr), recommendation("") { }
-
-public:
-  void addNode(); // Adds a node to the tree
-  string classify(DecisionTreeNode *node, Movie *movie); // Recursively traverses tree to make a recommendation
 };
 
 #endif // DECISION_TREE_NODE_H

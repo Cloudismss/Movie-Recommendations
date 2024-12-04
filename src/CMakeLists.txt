@@ -1,5 +1,6 @@
 set(Sources
         # Sources
+        "DecisionTree.cpp"
         "DecisionTreeNode.cpp"
 )
 
