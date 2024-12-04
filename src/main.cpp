@@ -15,7 +15,8 @@ using std::vector;
 
 // Headers
 void getMovieList(vector<Movie> &movieList);
-void testPrint(const vector<Movie> &movieList);
+void testPrintMovies(const vector<Movie> &movieList);
+void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirector);
 
 int main()
 {
@@ -30,9 +31,11 @@ int main()
     movieListFamousDirector.insert(std::make_pair(movieList[i].getTitle(), movieList[i].getFamousDirector()));
   }
 
-  // TODO: Print prediction results for each movie
+  // TODO: Print prediction results for each movie using binary tree logic
 
-  testPrint(movieList);
+  // TODO: Remove these functions once tree print is complete
+  testPrintMovies(movieList);
+  testPrintFamousDirectorMovies(movieListFamousDirector);
 
   return 0;
 }
@@ -73,7 +76,7 @@ void getMovieList(vector<Movie> &movieList)
   }
 }
 
-void testPrint(const vector<Movie> &movieList)
+void testPrintMovies(const vector<Movie> &movieList)
 {
   for (int i = 0; i < movieList.size(); ++i)
   {
@@ -86,4 +89,14 @@ void testPrint(const vector<Movie> &movieList)
   }
   
   cout << "\n";
+}
+
+void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirector)
+{
+  cout << "Movies with famous directors: \n\n";
+  for (auto iter = movieListFamousDirector.begin(); iter != movieListFamousDirector.end(); ++iter)
+  {
+    if (iter->second)
+      cout << iter->first << "\n";
+  }
 }
