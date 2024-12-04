@@ -19,7 +19,12 @@ public:
     : title(title), genre(genre), rating(rating), famousDirector(famousDirector), longDuration(longDuration) { }
 
 public:
-  string getGenre() { return genre; }
+  // Accessors
+  string getTitle() const { return title; }
+  string getGenre() const { return genre; }
+  string getRating() const { return rating; }
+  bool getFamousDirector() const { return famousDirector; }
+  bool getLongDuration() const { return longDuration; }
 };
 
 #endif // MOVIE_H
