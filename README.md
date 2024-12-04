@@ -4,5 +4,5 @@
 
 ## TODO:
 - Construct binary tree
-- Implement recommendation construct within tree logic
-- Consider creating `recommended` member variable within movie class and just print the movies using the testPrintMovie function and adding the `recommended` status
+- Implement recommendation construct within tree logig
+- Print movie recommendations
