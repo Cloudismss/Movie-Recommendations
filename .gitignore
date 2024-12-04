@@ -33,4 +33,6 @@
 
 # Custom
 build
-.vscode/settings.json
+.vscode
+.cache
+.DS_store
