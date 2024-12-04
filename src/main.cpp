@@ -1,49 +1,89 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <exception>
+#include <map>
 #include <vector>
 
 #include "DecisionTreeNode.h"
 #include "Movie.h"
 
+using std::cout;
 using std::string;
+using std::map;
 using std::vector;
 
 // Headers
-vector<Movie> getMovieList();
+void getMovieList(vector<Movie> &movieList);
+void testPrint(const vector<Movie> &movieList);
 
 int main()
 {
+  // Read data from file
+  vector<Movie> movieList;
+  getMovieList(movieList);
+
+  // Populate famous director movies in a map
+  map<string, bool> movieListFamousDirector;
+  for (int i = 0; i < movieList.size(); ++i)
+  {
+    movieListFamousDirector.insert(std::make_pair(movieList[i].getTitle(), movieList[i].getFamousDirector()));
+  }
+
+  // TODO: Print prediction results for each movie
+
+  testPrint(movieList);
+
   return 0;
 }
 
-vector<Movie> getMovieList()
+void getMovieList(vector<Movie> &movieList)
 {
   try
   {
     std::ifstream file("movies.txt");
 
     if (!file.is_open())
-      throw runtime_error("File not found");
-    
-    vector<Movie> movieList = nullptr;
+      throw std::runtime_error("File not found");
 
     string title, genre, rating;
-    bool famousDirector, longDuration;
+    bool famousDirector = false, longDuration = false;
 
-    while (file >> title >> genre >> rating >> famousDirector >> longDuration)
+    // Skip the first line in the read
+    string buffer = "";
+    getline(file, buffer);
+
+    while (!file.eof())
     {
-      movieList->push_back(Movie(title, genre, rating, famousDirector, longDuration));
+      getline(file, title, ',');
+      getline(file, genre, ',');
+      getline(file, rating, ',');
+      getline(file, buffer, ',');
+      famousDirector = stoi(buffer);
+      file >> longDuration;
+      file.ignore();
+      movieList.push_back(Movie(title, genre, rating, famousDirector, longDuration));
     }
 
     file.close();
-
-    return movieList;
   }
-  catch (const exception &e)
+  catch (const std::exception &e)
   {
-    std::cout << "Error: " << e.what() << "\n";
+     std::cout << "Error reading file: " << e.what() << "\n";
   }
+}
 
-  return nullptr;
+void testPrint(const vector<Movie> &movieList)
+{
+  for (int i = 0; i < movieList.size(); ++i)
+  {
+    cout << "Title: " << movieList[i].getTitle() << "\n"
+         << "Genre: " << movieList[i].getGenre() << "\n"
+         << "Rating: " << movieList[i].getRating() << "\n"
+         << "Famous Director: " << ((movieList[i].getFamousDirector()) ? "yes" : "no") << "\n"
+         << "Long Duration: " << ((movieList[i].getLongDuration()) ? "yes" : "no") << "\n"
+         << "\n";
+  }
+  
+  cout << "\n";
 }
