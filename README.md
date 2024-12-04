@@ -4,5 +4,5 @@
 
 ## TODO:
 - Construct binary tree
-- Implement recommendation construct within tree logig
+- Implement recommendation construct within tree logic
 - Print movie recommendations
