@@ -2,10 +2,12 @@
 #define DECISION_TREE_NODE_H
 
 #include <string>
+#include <vector>
 
 #include "Movie.h"
 
 using std::string;
+using std::vector;
 
 class DecisionTreeNode
 {
@@ -16,6 +18,7 @@ private:
   DecisionTreeNode *yes;
   DecisionTreeNode *no;
   string recommendation; // If it's a leaf node
+  vector<string> titles; // Collection of titles for each leaf
 
 public:
   DecisionTreeNode(string question) : question(question), yes(nullptr), no(nullptr), recommendation("") { }

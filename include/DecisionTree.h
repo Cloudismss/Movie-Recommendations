@@ -9,7 +9,15 @@ using std::string;
 
 class DecisionTree
 {
+private:
+  DecisionTreeNode *rootPtr = nullptr;
+
 public:
+  // Accessors
+  void printTree() const;
+  void printTreeHelper(DecisionTreeNode *node) const;
+
+  // Mutators
   void addNode(); // Adds a node to the tree
   string classify(DecisionTreeNode *node, Movie *movie); // Recursively traverses tree to make a recommendation
 };
