@@ -15,10 +15,17 @@ private:
 public:
   // Accessors
   void printTree() const;
-  void printTreeHelper(DecisionTreeNode *node) const;
+  void printTreeHelper(DecisionTreeNode *node, int level) const;
+
+  //Constructor
+  DecisionTree();
+
+  //Destructor
+  ~DecisionTree();
 
   // Mutators
-  void addNode(); // Adds a node to the tree
+  void addNode(DecisionTreeNode* parent, string question, bool isYesBranch); // Adds a node to the tree
+  void buildTree(); //to build manually
   string classify(DecisionTreeNode *node, Movie *movie); // Recursively traverses tree to make a recommendation
 };
 

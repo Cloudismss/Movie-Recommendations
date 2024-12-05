@@ -4,6 +4,46 @@
 
 using std::cout;
 
+//Constructor Definition
+DecisionTree::DecisionTree() : rootPtr(nullptr) {}
+
+//Destructor Definition
+DecisionTree::~DecisionTree() 
+{
+  deleteTree(rootPtr);
+}
+
+void DecisionTree::deleteTree(DecisionTreeNode* tmpnode)
+{
+  if(tmpnode)
+  {
+    deleteTree(tmpnode->yes);
+    deleteTree(tmpnode->no);
+    delete tmpnode;
+  }
+}
+
+void DecisionTree::buildTree()
+{
+  rootPtr = new DecisionTreeNode("Is the genre Action?");
+  rootPtr->yes = new DecisionTreeNode("Is the director famous?");
+  rootPtr->yes->yes = new DecisionTreeNode("Recommended");
+  rootPtr->yes->yes->recommendation = "Recommended";
+  rootPtr->yes->no->no = new DecisionTreeNode("Not Recommended");
+  rootPtr->yes->no->recommendation = "Not Recommended";
+
+  rootPtr->no = new DecisionTreeNode("Is the rating PG-13 or lower?");
+  rootPtr->no->yes = new DecisionTreeNode("Not Recommended");
+  rootPtr->no->yes->recommendation = "Not Recommended";
+  rootPtr->no->no = new DecisionTreeNode("Is the duration long?");
+  rootPtr->no->no->yes = new DecisionTreeNode("Recommended");
+  rootPtr->no->no->yes->recommendation = "Recommended";
+  rootPtr->no->no->no = new DecisionTreeNode("Not Recommended");
+  rootPtr->no->no->no->recommendation = "Not Recommended";
+
+}
+
+
 string DecisionTree::classify(DecisionTreeNode *node, Movie *movie)
 {
   if (!node->yes && !node->no)
@@ -33,14 +73,23 @@ void DecisionTree::printTree() const
     return;
   }
 
-  printTreeHelper(rootPtr);  
+  printTreeHelper(rootPtr, 0);  
 }
 
-void DecisionTree::printTreeHelper(DecisionTreeNode *node) const
+void DecisionTree::printTreeHelper(DecisionTreeNode *node, int level) const
 {
   if (node)
   {
+    for (int i = 0; i < level; i++)
+    {
+      cout << " ";
+    }
+    if(!node->yes && !node->no)
+      cout << "Leaf: " << node->recommendation << std::endl;
+    else
+      cout << "Question: " << node->question << std::endl;
 
+    printTreeHelper(node->yes, level+1);
+    printTreeHelper(node->no, level+1);
   }
-  
 }
