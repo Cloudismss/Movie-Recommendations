@@ -19,8 +19,7 @@ public:
   void printTree() const;
   void printTreeHelper(DecisionTreeNode *node, int level) const;
   DecisionTreeNode* getRoot() const { return rootPtr; }
-
-
+  
   //Constructor
   DecisionTree();
 

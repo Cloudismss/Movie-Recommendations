@@ -25,13 +25,12 @@ void DecisionTree::deleteTree(DecisionTreeNode* tmpnode)
 
 void DecisionTree::buildTree()
 {
-    rootPtr = new DecisionTreeNode("Is the genre Action?"); // root of the tree
-    rootPtr->yes = new DecisionTreeNode("Is the director famous?");
-    rootPtr->yes->yes = new DecisionTreeNode("Recommended");
-    rootPtr->yes->yes->recommendation = "Recommended";
-    rootPtr->yes->no = new DecisionTreeNode("Not Recommended");
-    rootPtr->yes->no->recommendation = "Not Recommended";
-
+  rootPtr = new DecisionTreeNode("Is the genre Action?"); // root of the tree
+  rootPtr->yes = new DecisionTreeNode("Is the director famous?");
+  rootPtr->yes->yes = new DecisionTreeNode("Recommended");
+  rootPtr->yes->yes->recommendation = "Recommended";
+  rootPtr->yes->no = new DecisionTreeNode("Not Recommended");
+  rootPtr->yes->no->recommendation = "Not Recommended";
 
   rootPtr->no = new DecisionTreeNode("Is the rating PG-13 or lower?");
   rootPtr->no->yes = new DecisionTreeNode("Not Recommended");
@@ -41,9 +40,7 @@ void DecisionTree::buildTree()
   rootPtr->no->no->yes->recommendation = "Recommended";
   rootPtr->no->no->no = new DecisionTreeNode("Not Recommended");
   rootPtr->no->no->no->recommendation = "Not Recommended";
-
 }
-
 
 string DecisionTree::classify(DecisionTreeNode *node, const Movie *movie) const
 {
