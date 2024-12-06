@@ -1,7 +1,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <exception>
 #include <map>
 #include <vector>
 #include <sstream>
@@ -16,8 +15,7 @@ using std::vector;
 
 // Headers
 void getMovieList(vector<Movie> &movieList);
-void testPrintMovies(const vector<Movie> &movieList);
-void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirector);
+void printFamousDirectorMovies(const map<string, bool> movieListFamousDirector);
 
 int main()
 {
@@ -32,6 +30,8 @@ int main()
     movieListFamousDirector.insert(std::make_pair(movieList[i].getTitle(), movieList[i].getFamousDirector()));
   }
 
+  // Print famous director movies
+  //printFamousDirectorMovies(movieListFamousDirector);
 
   DecisionTree tree;
   tree.buildTree();
@@ -41,30 +41,25 @@ int main()
     string recommend = tree.classify(tree.getRoot(), &movie);
     cout << "Movie: " << movie.getTitle() << " - " << recommend << std::endl;
   }
-
-  // TODO: Print prediction results for each movie using binary tree logic
-
-  // TODO: Remove these functions once tree print is complete
-  //testPrintMovies(movieList);
-  //testPrintFamousDirectorMovies(movieListFamousDirector);
-
-  return 0;
 }
 
 
 void getMovieList(std::vector<Movie> &movieList)
 {
-    std::ifstream file("movies.txt");
-    std::string line;
-
-    if (!file.is_open())
+    std::ifstream file;
+    try 
     {
-        std::cerr << "Error: Unable to open 'movies.txt'.\n";
-        return;
+      file.open("movies.txt");
+      if (!file)
+        throw "Error: Unable to open 'movies.txt'\n";
+    } catch (const char *error) 
+    {
+      cout << error;
+      return;
     }
 
+    std::string line;
     std::getline(file, line); // Skip header
-
     while (std::getline(file, line))
     {
         if (line.empty()) continue;
@@ -85,22 +80,7 @@ void getMovieList(std::vector<Movie> &movieList)
     }
 }
 
-void testPrintMovies(const vector<Movie> &movieList)
-{
-  for (int i = 0; i < movieList.size(); ++i)
-  {
-    cout << "Title: " << movieList[i].getTitle() << "\n"
-         << "Genre: " << movieList[i].getGenre() << "\n"
-         << "Rating: " << movieList[i].getRating() << "\n"
-         << "Famous Director: " << ((movieList[i].getFamousDirector()) ? "yes" : "no") << "\n"
-         << "Long Duration: " << ((movieList[i].getLongDuration()) ? "yes" : "no") << "\n"
-         << "\n";
-  }
-  
-  cout << "\n";
-}
-
-void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirector)
+void printFamousDirectorMovies(const map<string, bool> movieListFamousDirector)
 {
   cout << "Movies with famous directors: \n\n";
   for (auto iter = movieListFamousDirector.begin(); iter != movieListFamousDirector.end(); ++iter)
@@ -108,4 +88,5 @@ void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirect
     if (iter->second)
       cout << iter->first << "\n";
   }
+  cout <<"\n";
 }
