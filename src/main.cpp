@@ -4,8 +4,9 @@
 #include <exception>
 #include <map>
 #include <vector>
+#include <sstream>
 
-#include "DecisionTreeNode.h"
+#include "DecisionTree.h"
 #include "Movie.h"
 
 using std::cout;
@@ -31,49 +32,57 @@ int main()
     movieListFamousDirector.insert(std::make_pair(movieList[i].getTitle(), movieList[i].getFamousDirector()));
   }
 
+
+  DecisionTree tree;
+  tree.buildTree();
+
+  for (const auto &movie : movieList)
+  {
+    string recommend = tree.classify(tree.getRoot(), &movie);
+    cout << "Movie: " << movie.getTitle() << " - " << recommend << std::endl;
+  }
+
   // TODO: Print prediction results for each movie using binary tree logic
 
   // TODO: Remove these functions once tree print is complete
-  testPrintMovies(movieList);
-  testPrintFamousDirectorMovies(movieListFamousDirector);
+  //testPrintMovies(movieList);
+  //testPrintFamousDirectorMovies(movieListFamousDirector);
 
   return 0;
 }
 
-void getMovieList(vector<Movie> &movieList)
+
+void getMovieList(std::vector<Movie> &movieList)
 {
-  try
-  {
     std::ifstream file("movies.txt");
+    std::string line;
 
     if (!file.is_open())
-      throw std::runtime_error("File not found");
-
-    string title, genre, rating;
-    bool famousDirector = false, longDuration = false;
-
-    // Skip the first line in the read
-    string buffer = "";
-    getline(file, buffer);
-
-    while (!file.eof())
     {
-      getline(file, title, ',');
-      getline(file, genre, ',');
-      getline(file, rating, ',');
-      getline(file, buffer, ',');
-      famousDirector = stoi(buffer);
-      file >> longDuration;
-      file.ignore();
-      movieList.push_back(Movie(title, genre, rating, famousDirector, longDuration));
+        std::cerr << "Error: Unable to open 'movies.txt'.\n";
+        return;
     }
 
-    file.close();
-  }
-  catch (const std::exception &e)
-  {
-     std::cout << "Error reading file: " << e.what() << "\n";
-  }
+    std::getline(file, line); // Skip header
+
+    while (std::getline(file, line))
+    {
+        if (line.empty()) continue;
+
+        std::istringstream ss(line);
+        std::string title, genre, rating, famousDirectorStr, longDurationStr;
+
+        std::getline(ss, title, ',');
+        std::getline(ss, genre, ',');
+        std::getline(ss, rating, ',');
+        std::getline(ss, famousDirectorStr, ',');
+        std::getline(ss, longDurationStr);
+
+        bool famousDirector = (famousDirectorStr == "1");
+        bool longDuration = (longDurationStr == "1");
+
+        movieList.emplace_back(title, genre, rating, famousDirector, longDuration);
+    }
 }
 
 void testPrintMovies(const vector<Movie> &movieList)

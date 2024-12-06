@@ -25,12 +25,13 @@ void DecisionTree::deleteTree(DecisionTreeNode* tmpnode)
 
 void DecisionTree::buildTree()
 {
-  rootPtr = new DecisionTreeNode("Is the genre Action?");
-  rootPtr->yes = new DecisionTreeNode("Is the director famous?");
-  rootPtr->yes->yes = new DecisionTreeNode("Recommended");
-  rootPtr->yes->yes->recommendation = "Recommended";
-  rootPtr->yes->no->no = new DecisionTreeNode("Not Recommended");
-  rootPtr->yes->no->recommendation = "Not Recommended";
+    rootPtr = new DecisionTreeNode("Is the genre Action?"); // root of the tree
+    rootPtr->yes = new DecisionTreeNode("Is the director famous?");
+    rootPtr->yes->yes = new DecisionTreeNode("Recommended");
+    rootPtr->yes->yes->recommendation = "Recommended";
+    rootPtr->yes->no = new DecisionTreeNode("Not Recommended");
+    rootPtr->yes->no->recommendation = "Not Recommended";
+
 
   rootPtr->no = new DecisionTreeNode("Is the rating PG-13 or lower?");
   rootPtr->no->yes = new DecisionTreeNode("Not Recommended");
@@ -44,25 +45,29 @@ void DecisionTree::buildTree()
 }
 
 
-string DecisionTree::classify(DecisionTreeNode *node, Movie *movie)
+string DecisionTree::classify(DecisionTreeNode *node, const Movie *movie) const
 {
-  if (!node->yes && !node->no)
-    return node->recommendation; // Leaf node reached
+    if (!node->yes && !node->no)
+        return node->recommendation; // Leaf node reached
 
-  // Recommend condition 1
-  if (node->question == "Is the genre Action?")
-    return (movie->getGenre() == "Action") ? classify(node->yes, movie) : classify(node->no, movie);
-  if (node->question == "Is the rating PG-13 or lower?")
-    return (movie->getRating() != "R") ? classify(node->yes, movie) : classify(node->no, movie);
+    //Question 1
+    if (node->question == "Is the genre Action?")
+        return (movie->getGenre() == "Action") ? classify(node->yes, movie) : classify(node->no, movie);
+    
+    //Question 2
+    if (node->question == "Is the rating PG-13 or lower?")
+        return (movie->getRating() != "R") ? classify(node->yes, movie) : classify(node->no, movie);
 
-  // Recommend condition 2
-  if (node->question == "Is the director famous?")
-    return (movie->getFamousDirector()) ? classify(node->yes, movie) : classify(node->no, movie);
-  if (node->question == "Is the duration long?")
-    return (movie->getLongDuration()) ? classify(node->yes, movie) : classify(node->no, movie);
+    //Question 3
+    if (node->question == "Is the director famous?")
+        return (movie->getFamousDirector()) ? classify(node->yes, movie) : classify(node->no, movie);
+    
+    //Question 4
+    if (node->question == "Is the duration long?")
+        return (movie->getLongDuration()) ? classify(node->yes, movie) : classify(node->no, movie);
 
-  // Don't recommend
-  return "Not Recommended";
+    // Default
+    return "Not Recommended";
 }
 
 void DecisionTree::printTree() const
