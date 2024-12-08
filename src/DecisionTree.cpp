@@ -53,23 +53,23 @@ string DecisionTree::classify(DecisionTreeNode *node, const Movie *movie) const
         return node->recommendation; // Leaf node reached
 
     // Question 1
-    if (node->question == "Is the genre Action?")
+    if (node->question == qACTION)
         return (movie->getGenre() == "Action") ? classify(node->yes, movie) : classify(node->no, movie);
     
     // Question 2
-    if (node->question == "Is the rating PG-13 or lower?")
+    if (node->question == qRATING)
         return (movie->getRating() != "R") ? classify(node->yes, movie) : classify(node->no, movie);
 
     // Question 3
-    if (node->question == "Is the director famous?")
+    if (node->question == qDIRECTOR)
         return (movie->getFamousDirector()) ? classify(node->yes, movie) : classify(node->no, movie);
     
     // Question 4
-    if (node->question == "Is the duration long?")
+    if (node->question == qLONG)
         return (movie->getLongDuration()) ? classify(node->yes, movie) : classify(node->no, movie);
 
     // Default
-    return "Not Recommended";
+    return rNO;
 }
 
 void DecisionTree::printTree() const
