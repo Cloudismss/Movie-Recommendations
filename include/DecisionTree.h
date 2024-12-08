@@ -19,16 +19,12 @@ public:
   void printTree() const;
   void printTreeHelper(DecisionTreeNode *node, int level) const;
   DecisionTreeNode* getRoot() const { return rootPtr; }
-  
-  //Constructor
-  DecisionTree();
 
-  //Destructor
-  ~DecisionTree();
+  // Destructor
+  ~DecisionTree() { deleteTree(rootPtr); }
 
   // Mutators
-  void addNode(DecisionTreeNode* parent, string question, bool isYesBranch); // Adds a node to the tree
-  void buildTree(); //to build manually
+  void buildTree();
   string classify(DecisionTreeNode *node, const Movie *movie) const; // Recursively traverses tree to make a recommendation
 };
 
