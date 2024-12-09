@@ -4,70 +4,72 @@
 
 using std::cout;
 
-//Constructor Definition
-DecisionTree::DecisionTree() : rootPtr(nullptr) {}
+const string qACTION = "Is the genre Action?";
+const string qDIRECTOR = "Is the director famous?";
+const string qRATING = "Is the rating PG-13 or lower?";
+const string qLONG = "Is the duration long?";
+const string rYES = "Recommended";
+const string rNO = "Not Recommended";
 
-//Destructor Definition
-DecisionTree::~DecisionTree() 
+void DecisionTree::deleteTree(DecisionTreeNode* node)
 {
-  deleteTree(rootPtr);
-}
-
-void DecisionTree::deleteTree(DecisionTreeNode* tmpnode)
-{
-  if(tmpnode)
+  if(node)
   {
-    deleteTree(tmpnode->yes);
-    deleteTree(tmpnode->no);
-    delete tmpnode;
+    deleteTree(node->yes);
+    deleteTree(node->no);
+    delete node;
   }
 }
 
 void DecisionTree::buildTree()
 {
-    rootPtr = new DecisionTreeNode("Is the genre Action?"); // root of the tree
-    rootPtr->yes = new DecisionTreeNode("Is the director famous?");
-    rootPtr->yes->yes = new DecisionTreeNode("Recommended");
-    rootPtr->yes->yes->recommendation = "Recommended";
-    rootPtr->yes->no = new DecisionTreeNode("Not Recommended");
-    rootPtr->yes->no->recommendation = "Not Recommended";
+  rootPtr = new DecisionTreeNode(qACTION);
 
+  rootPtr->yes = new DecisionTreeNode(qRATING);
+    rootPtr->yes->yes = new DecisionTreeNode(rYES);
+    rootPtr->yes->yes->recommendation = rYES;
+    rootPtr->yes->no = new DecisionTreeNode(qDIRECTOR);
+      rootPtr->yes->no->yes = new DecisionTreeNode(qLONG);
+        rootPtr->yes->no->yes->yes = new DecisionTreeNode(rYES);
+        rootPtr->yes->no->yes->yes->recommendation = rYES;
+        rootPtr->yes->no->yes->no = new DecisionTreeNode(rNO);
+        rootPtr->yes->no->yes->no->recommendation = rNO;
+      rootPtr->yes->no->no = new DecisionTreeNode(rNO);
+      rootPtr->yes->no->no->recommendation = rNO;
 
-  rootPtr->no = new DecisionTreeNode("Is the rating PG-13 or lower?");
-  rootPtr->no->yes = new DecisionTreeNode("Not Recommended");
-  rootPtr->no->yes->recommendation = "Not Recommended";
-  rootPtr->no->no = new DecisionTreeNode("Is the duration long?");
-  rootPtr->no->no->yes = new DecisionTreeNode("Recommended");
-  rootPtr->no->no->yes->recommendation = "Recommended";
-  rootPtr->no->no->no = new DecisionTreeNode("Not Recommended");
-  rootPtr->no->no->no->recommendation = "Not Recommended";
-
+  rootPtr->no = new DecisionTreeNode(qDIRECTOR);
+    rootPtr->no->yes = new DecisionTreeNode(qLONG);
+      rootPtr->no->yes->yes = new DecisionTreeNode(rYES);
+      rootPtr->no->yes->yes->recommendation = rYES;
+      rootPtr->no->yes->no = new DecisionTreeNode(rNO);
+      rootPtr->no->yes->no->recommendation = rNO;
+    rootPtr->no->no = new DecisionTreeNode(rNO);
+    rootPtr->no->no->recommendation = rNO;
 }
-
 
 string DecisionTree::classify(DecisionTreeNode *node, const Movie *movie) const
 {
     if (!node->yes && !node->no)
         return node->recommendation; // Leaf node reached
 
-    //Question 1
-    if (node->question == "Is the genre Action?")
+    // Question 1
+    if (node->question == qACTION)
         return (movie->getGenre() == "Action") ? classify(node->yes, movie) : classify(node->no, movie);
     
-    //Question 2
-    if (node->question == "Is the rating PG-13 or lower?")
+    // Question 2
+    if (node->question == qRATING)
         return (movie->getRating() != "R") ? classify(node->yes, movie) : classify(node->no, movie);
 
-    //Question 3
-    if (node->question == "Is the director famous?")
+    // Question 3
+    if (node->question == qDIRECTOR)
         return (movie->getFamousDirector()) ? classify(node->yes, movie) : classify(node->no, movie);
     
-    //Question 4
-    if (node->question == "Is the duration long?")
+    // Question 4
+    if (node->question == qLONG)
         return (movie->getLongDuration()) ? classify(node->yes, movie) : classify(node->no, movie);
 
     // Default
-    return "Not Recommended";
+    return rNO;
 }
 
 void DecisionTree::printTree() const

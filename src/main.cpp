@@ -1,7 +1,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <exception>
 #include <map>
 #include <vector>
 #include <sstream>
@@ -31,6 +30,8 @@ int main()
     movieListFamousDirector.insert(std::make_pair(movieList[i].getTitle(), movieList[i].getFamousDirector()));
   }
 
+  // Print famous director movies
+  //printFamousDirectorMovies(movieListFamousDirector);
 
   DecisionTree tree;
   tree.buildTree();
@@ -47,15 +48,19 @@ int main()
 
 void getMovieList(std::vector<Movie> &movieList)
 {
-    std::ifstream file("movies.txt");
-    std::string line;
-
-    if (!file.is_open())
+    std::ifstream file;
+    try 
     {
-        std::cerr << "Error: Unable to open 'movies.txt'.\n";
-        return;
+      file.open("movies.txt");
+      if (!file)
+        throw "Error: Unable to open 'movies.txt'\n";
+    } catch (const char *error) 
+    {
+      cout << error;
+      return;
     }
 
+    std::string line;
     std::getline(file, line); // Skip header
 
 
