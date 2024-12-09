@@ -16,8 +16,7 @@ using std::vector;
 
 // Headers
 void getMovieList(vector<Movie> &movieList);
-void testPrintMovies(const vector<Movie> &movieList);
-void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirector);
+
 
 int main()
 {
@@ -42,12 +41,6 @@ int main()
     cout << "Movie: " << movie.getTitle() << " - " << recommend << std::endl;
   }
 
-  // TODO: Print prediction results for each movie using binary tree logic
-
-  // TODO: Remove these functions once tree print is complete
-  //testPrintMovies(movieList);
-  //testPrintFamousDirectorMovies(movieListFamousDirector);
-
   return 0;
 }
 
@@ -65,47 +58,41 @@ void getMovieList(std::vector<Movie> &movieList)
 
     std::getline(file, line); // Skip header
 
+
+    int linenum = 1;  //used for tracking errors 
     while (std::getline(file, line))
     {
+        linenum++;
+
         if (line.empty()) continue;
 
         std::istringstream ss(line);
         std::string title, genre, rating, famousDirectorStr, longDurationStr;
 
-        std::getline(ss, title, ',');
-        std::getline(ss, genre, ',');
-        std::getline(ss, rating, ',');
-        std::getline(ss, famousDirectorStr, ',');
-        std::getline(ss, longDurationStr);
+        try
+        {
+          std::getline(ss, title, ',');
+          std::getline(ss, genre, ',');
+          std::getline(ss, rating, ',');
+          std::getline(ss, famousDirectorStr, ',');
+          std::getline(ss, longDurationStr);
+          //makes sure all the parts of the entry are included
+          if (title.empty() || genre.empty() || rating.empty() || famousDirectorStr.empty() || longDurationStr.empty())
+            throw std::invalid_argument("Missing movie input");
 
-        bool famousDirector = (famousDirectorStr == "1");
-        bool longDuration = (longDurationStr == "1");
+          bool famousDirector = (famousDirectorStr == "1");
+          bool longDuration = (longDurationStr == "1");
 
-        movieList.emplace_back(title, genre, rating, famousDirector, longDuration);
+          movieList.emplace_back(title, genre, rating, famousDirector, longDuration);
     }
-}
 
-void testPrintMovies(const vector<Movie> &movieList)
-{
-  for (int i = 0; i < movieList.size(); ++i)
-  {
-    cout << "Title: " << movieList[i].getTitle() << "\n"
-         << "Genre: " << movieList[i].getGenre() << "\n"
-         << "Rating: " << movieList[i].getRating() << "\n"
-         << "Famous Director: " << ((movieList[i].getFamousDirector()) ? "yes" : "no") << "\n"
-         << "Long Duration: " << ((movieList[i].getLongDuration()) ? "yes" : "no") << "\n"
-         << "\n";
+    catch (const std::exception &ex)
+    {
+      std::cerr << "Error on line input " << linenum << ": " << ex.what() << std::endl;
+      std::cerr << "Skipping line: " << line << std::endl;
+    }
   }
-  
-  cout << "\n";
-}
 
-void testPrintFamousDirectorMovies(const map<string, bool> movieListFamousDirector)
-{
-  cout << "Movies with famous directors: \n\n";
-  for (auto iter = movieListFamousDirector.begin(); iter != movieListFamousDirector.end(); ++iter)
-  {
-    if (iter->second)
-      cout << iter->first << "\n";
-  }
+  if (movieList.empty())
+    throw std::runtime_error("Error: No valid movies could be read");
 }
